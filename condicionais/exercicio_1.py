@@ -1,11 +1,11 @@
-import json 
+import json
 import urllib.request
 
-#Solicitar ao usuário o CEP
-cep = input('Digite o CEP:')
+# Solicitar ao usuário o CEP
+cep = input('Digite o CEP: ')
 
 # Construir na URL de consulta
-url = f"https://viacep.com.br./ws/{cep}/json/"
+url = f"https://viacep.com.br/ws/{cep}/json/"
 
 try:
     # Fazer a requisição
@@ -14,7 +14,27 @@ try:
     # Ler o conteudo da resposta
     data = response.read().decode('utf-8')
 
-    # Teste...
-    print(data)
-except Exception as e :
+    # Converter JSON em dicionario Python
+    endereço = json.loads(data)
+
+    #Verificar se a consulta foi bem sucedida
+    if endereço.get('erro'):
+        print("CEP não encontrado")
+    else:
+        # Armazenar informações em variáveis
+        logradouro = endereço['logradouro']
+        complemento = endereço['complemento']
+        bairro = endereço['bairro']
+        cidade = endereço['localidade']
+        estado = endereço['uf']
+        # Exibir informações do endereço da tela
+        print(f"Logradouro: {logradouro}")
+        print(f"Complemento: {complemento}")
+        print("Bairro: {bairro}")
+        print(f"Cidade: {cidade}")
+        print(f"Estado: {estado}")
+
+        # Fechar a conexão
+        response.close()
+except Exception as e:
     print(f"Erro: {e}")
